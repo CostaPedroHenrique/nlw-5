@@ -11,6 +11,8 @@ import styles from './episode.module.scss'
 import { EpisodeType } from '../../utils/episodeTypes'
 import { usePlayer } from '../../contexts/PlayerContext'
 
+import episodesData from '../../../server.json'
+
 type EpisodeProps = {
   episode: EpisodeType
 }
@@ -33,6 +35,7 @@ export default function Episode({ episode }: EpisodeProps) {
           height={160}
           src={episode.thumbnail}
           objectFit="cover"
+          alt={episode.title}
         />
 
         <button type="button" onClick={() => play(episode)}>
@@ -72,7 +75,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }
   })
   return {
-    paths: [],
+    paths: paths,
     fallback: 'blocking'
   }
 }
@@ -80,7 +83,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ctx => {
   const { slug } = ctx.params
 
-  const { data } = await api.get(`/episodes/${slug}`)
+  // const { data } = await api.get(`/episodes/${slug}`)
+  const data = episodesData['episodes'].find(episode => episode.id === slug)
 
   const episode = {
     id: data.id,
